@@ -108,6 +108,7 @@ fresh shell, after `./setup`) is what installs those handed-off CLIs.
 
 #### Generative AI
 
+- [CodeRabbit CLI](https://docs.coderabbit.ai/cli/overview)
 - (B) [Ollama](https://ollama.com/)
 
 ### Hardware

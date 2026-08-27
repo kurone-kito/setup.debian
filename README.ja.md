@@ -107,6 +107,7 @@ mise 設定に移管されました。移管先の一覧や層構造について
 
 #### 生成 AI
 
+- [CodeRabbit CLI](https://docs.coderabbit.ai/cli/overview)
 - (B) [Ollama](https://ollama.com/)
 
 ### ハードウェア

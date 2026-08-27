@@ -161,9 +161,12 @@ run_stage lib/unity.sh
 # lib/unity.sh installs the CLI to ~/.local/bin as a separate process, so
 # the vendor installer's own PATH edit (to ~/.bashrc, read by future
 # shells) never reaches this already-running script. Add it here so
-# lib/unity-editors.sh can find `unity` within this same setup run.
+# lib/unity-editors.sh can find `unity` within this same setup run, and
+# so lib/coderabbit.sh's own installer sees ~/.local/bin already on PATH
+# and skips its own ~/.bashrc edit (chezmoi/dotfiles manage that file).
 PATH="${HOME}/.local/bin:${PATH}"
 export PATH
+run_stage lib/coderabbit.sh
 run_stage lib/teardown.sh
 run_stage lib/locale.sh
 

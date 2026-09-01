@@ -15,7 +15,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Run cspell
-        uses: streetsidesoftware/cspell-action@de2a73e963e7443969755b648a1008f77033c5b2 # v8
+        uses: streetsidesoftware/cspell-action@e0668cf020899e887ee8ad4d173c31738a79eae8 # v9.0.1
       - name: Run markdownlint
         uses: DavidAnson/markdownlint-cli2-action@21c1be1b93ad9ed58fa840aacc3f279cde2a72ff # v24.2.0
       - name: Run shellcheck

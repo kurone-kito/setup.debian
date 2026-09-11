@@ -5,6 +5,7 @@
     "*.md": "${capture}.*.md",
     ".gitattributes": ".gitignore",
     ".markdownlint.*": ".markdownlint-cli2.*",
+    "AGENTS.md": "CLAUDE.md, GEMINI.md",
     "main.tf": ".terraform.lock.hcl,.terraform.tfstate.lock.info,terraform.tfstate,terraform.tfstate.backup"
   },
   "files.associations": {

@@ -3,7 +3,7 @@
   "explorer.fileNesting.expand": false,
   "explorer.fileNesting.patterns": {
     "*.md": "${capture}.*.md",
-    ".gitattributes": ".gitignore",
+    ".gitattributes": ".gitignore, .gitmessage",
     ".markdownlint.*": ".markdownlint-cli2.*",
     "AGENTS.md": "CLAUDE.md, GEMINI.md",
     "main.tf": ".terraform.lock.hcl,.terraform.tfstate.lock.info,terraform.tfstate,terraform.tfstate.backup"
@@ -11,6 +11,7 @@
   "files.associations": {
     "*.tfstate": "json",
     "*.tfstate.lock.info": "json",
+    ".gitmessage": "git-commit",
     ".imgbotconfig": "json",
     "LICENSE": "plaintext"
   },

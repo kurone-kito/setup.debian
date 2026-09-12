@@ -290,9 +290,11 @@ jobs:
               process.stdout.write("");
             }
           ')
-          echo "applied=$APPLIED" >> "$GITHUB_OUTPUT"
-          echo "comment-id=$COMMENT_ID" >> "$GITHUB_OUTPUT"
-          echo "body-digest=$BODY_DIGEST" >> "$GITHUB_OUTPUT"
+          {
+            echo "applied=$APPLIED"
+            echo "comment-id=$COMMENT_ID"
+            echo "body-digest=$BODY_DIGEST"
+          } >> "$GITHUB_OUTPUT"
       - name: Record the posted marker's provenance
         # A run-scoped Actions artifact naming the EXACT comment id AND
         # body digest this run's own trusted job just posted -- the

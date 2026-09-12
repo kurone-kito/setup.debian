@@ -430,10 +430,19 @@ on every upstream bump. `ephemeral-npx` avoids both costs.
   (adopted at `0.11.0`, #143 — previously neither was, per the `0.7.0`
   entry above): `ciGate` sets `trustEmptyProtectionReads: true` (#99,
   unchanged), `externalCheckWaivers.mode: "maintainer-authorized"`, and
-  `externalChecks.waivable` lists `idd-advisory-convergence`. A stuck
-  not-ready verdict past the 24h deadline now has the waiver escape
-  hatch available via `providerOutage`'s declaration path (target:
-  #158). Posting a waiver comment does not by itself re-run the check —
+  `externalChecks.waivable` lists `idd-advisory-convergence`. This opens
+  two distinct routes, not one: (1) a maintainer can post a
+  per-pull-request `idd-external-check-waiver:` marker directly once
+  past the 24h deadline, or (2) once this pull request's own
+  terminal-unavailable state independently holds (Copilot's recovery
+  cycle exhausted and `advisoryWait.terminalWindow` elapsed with no
+  current-HEAD review — see
+  [`idd-advisory-wait.instructions.md`](../.github/instructions/idd-advisory-wait.instructions.md#terminal-copilot-stall-recovery-contract-state-policy-markers-clock)),
+  an active `providerOutage` declaration (target: #158) substitutes for
+  posting that per-PR marker. Passing the 24h deadline alone does
+  **not** by itself satisfy route (2) — declaring an outage without the
+  PR's own terminal state also holding leaves the check red. Posting a
+  waiver comment does not by itself re-run the check —
   a fresh trigger (a `pull_request` synchronize, review or
   review-comment activity, or `workflow_dispatch`) still has to fire;
   this workflow has no `push` trigger.

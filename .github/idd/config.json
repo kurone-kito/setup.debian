@@ -28,16 +28,38 @@
   "advisoryWait": {
     "convergenceScope": "idd-claimed"
   },
+  "critiqueLoop": {
+    "delegate": {
+      "command": "npx -y markdownlint-cli2 \"**/*.md\" && npx -y cspell lint \"**\" --no-progress",
+      "mode": "combined"
+    }
+  },
+  "providerOutage": {
+    "declarationTarget": 158
+  },
+  "authoringLanguage": "en",
+  "upstreamEscalation": {
+    "enabled": true
+  },
+  "developmentBranch": "main",
   "ciGate": {
-    "trustEmptyProtectionReads": true
+    "trustEmptyProtectionReads": true,
+    "externalCheckWaivers": {
+      "mode": "maintainer-authorized"
+    },
+    "externalChecks": {
+      "waivable": [{ "selector": "idd-advisory-convergence" }]
+    }
   },
   "worktreeGuard": {
-    "enabled": true
+    "enabled": true,
+    "refuseBaseBranchCommits": true
   },
   "labels": {
     "roadmapLabelName": "roadmap",
     "blockedByHumanLabelName": "status:blocked-by-human",
-    "needsDecisionLabelName": "status:needs-decision"
+    "needsDecisionLabelName": "status:needs-decision",
+    "untrustedLabelerLogins": ["coderabbitai[bot]"]
   },
   "issueScope": "roadmap-first",
   "orphanFirstPolicy": "none",

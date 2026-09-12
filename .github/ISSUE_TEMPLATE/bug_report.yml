@@ -42,10 +42,10 @@ body:
       label: Environment Details
       description: Please provide details about your environment.
       value: |
-        - Target deployment platform: [e.g. AWS/GCP/local cluster/etc...]
-        - Target OS: [e.g. RHEL 9/Ubuntu 24.04/etc...]
-        - Version of this project or specific commit: [e.g. 1.4.3/commit hash]
-        - Version of any relevant project languages: [e.g. Kubernetes 1.30/Python 3.9.7/etc...]
+        - Host: [e.g. real Ubuntu machine/WSL2/Multipass VM (`./setup -v`)]
+        - Ubuntu version: [e.g. 24.04]
+        - Setup command used: [e.g. `./setup`, `./setup --desktop`, `./setup --unity`]
+        - Version/commit of this repository: [e.g. 1.4.3/commit hash]
     validations:
       required: true
 

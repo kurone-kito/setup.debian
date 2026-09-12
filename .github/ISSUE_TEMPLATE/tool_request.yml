@@ -1,0 +1,108 @@
+---
+name: 📦 Tool installation request
+description: Request a new CLI tool be installed by this repository
+labels: enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this tool installation request!
+
+        Before you continue filling out this report, please take a moment to check that your tool installation request has not been [already reported on GitHub](https://github.com/kurone-kito/setup.ubuntu/search?q=is%3Aissue&type=issues) 🙌
+
+  - type: input
+    id: tool_name
+    attributes:
+      label: Tool Name
+      description: The name of the tool you'd like installed.
+      placeholder: e.g. ripgrep
+    validations:
+      required: true
+
+  - type: input
+    id: tool_url
+    attributes:
+      label: Homepage / Repository URL
+      description: A link to the tool's homepage or source repository.
+      placeholder: https://github.com/BurntSushi/ripgrep
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Which existing README category best fits this tool?
+      options:
+        - Archive tools
+        - Benchmark tools
+        - Binary converters
+        - Clipboard tools
+        - Configuration tools
+        - Cryptography
+        - Database
+        - Development tools
+        - Download tools
+        - Files management
+        - Game development
+        - Generative AI
+        - Hardware
+        - Jokes
+        - Locales
+        - Package manager
+        - Remote tools
+        - SCM tools
+        - Shell utilities
+        - Text browsing tools
+        - Text converters
+        - Texts editors
+        - TUI
+        - Virtualizations
+        - Others
+        - Other / new category
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install_method
+    attributes:
+      label: Installation Method
+      description: How should this tool be installed?
+      options:
+        - Homebrew formula (B)
+        - mise-en-place (M)
+        - apt or other Ubuntu package
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: justification
+    attributes:
+      label: Justification
+      description: Why is this tool useful? What's the use case?
+      placeholder: I use this tool to do "X", which would help with "Y" in this project's workflow.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ownership_boundary
+    attributes:
+      label: Ownership Boundary
+      description: >-
+        Should this tool be installed by setup.ubuntu, or is it a better fit
+        for the shared dotfiles mise config? See
+        docs/dotfiles-boundary.md for this repository's ownership split.
+      options:
+        - setup.ubuntu (this repo)
+        - candidate for the dotfiles shared mise config instead
+        - Not sure, please advise
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Add any other context about the request here.
+      placeholder: Feel free to add any other context/information/screenshots/etc... that you think might be relevant to this request in here.

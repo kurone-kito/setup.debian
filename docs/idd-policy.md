@@ -55,6 +55,95 @@ changes.
   (`idd-advisory-convergence-comment.yml`) split out to #128, blocked
   on an upstream gap — no `ephemeral-npx`-reachable bin export for
   `scripts/review-comment-origin.mjs` exists in `f51a8bb7`.
+- Resynced: `iddVersion 0.11.0`, imported from
+  [`kurone-kito/idd-skill`](https://github.com/kurone-kito/idd-skill)
+  `main` at commit
+  [`1f90787ebf4021673ce6e5eb69741df331fd2037`](https://github.com/kurone-kito/idd-skill/commit/1f90787ebf4021673ce6e5eb69741df331fd2037)
+  (2026-09-12), carrying this repository through the `0.8.0`, `0.9.0`,
+  `0.10.0`, and `0.11.0` releases (roadmap #139, re-scoped in place from
+  an initially-drafted `0.9.0` target on 2026-09-12, before any of its
+  tracks were claimed or started, to avoid resyncing twice back to back
+  through the releases that shipped in the meantime).
+  `.github/instructions/lite/` remains deliberately excluded, unchanged
+  reasoning from prior entries. `mergePolicyAck: "fully_autonomous_merge"`
+  reaffirms the existing `mergePolicy` value now that upstream's own
+  distributed default flipped to `human_merge` — a pure diagnostics
+  field, no merge-authority change (#140). Adopted this cycle, all
+  settled via an authoring-time hearing (three) and a 2026-09-12
+  re-scoping hearing (four more) — not open questions:
+  - `critiqueLoop.delegate` in `combined` mode, using this repository's
+    own `pre-push-validate` command — `fallback` mode was considered
+    and rejected because a lint-only delegate would skip the per-agent
+    critique pass on almost every clean run, a review-quality
+    regression rather than an addition (#143). See
+    [Policy decisions](#policy-decisions) below (supersedes the
+    "shipped defaults" position recorded at `0.7.0`).
+  - `providerOutage` declaration adopted in full, including the
+    `ciGate.externalCheckWaivers`/`externalChecks.waivable`
+    preconditions it depends on — this closes the "Neither
+    precondition is met today" gap the `0.7.0` entry recorded as
+    deliberately left open (#143). Declaration target: #158. See
+    [Helper runtime](#helper-runtime-ephemeral-npx) below for the
+    updated precondition state.
+  - `authoringLanguage: "en"` adopted, previously left unadopted twice
+    — this repository's global Claude Code instructions direct English
+    documentation/comments regardless of a session's own conversational
+    language, and this repository's issue/PR history is entirely in
+    English already (#143).
+  - `upstreamEscalation.enabled: true` adopted — this repository has
+    real precedent (#128, #130) finding genuine `idd-skill` upstream
+    defects during resyncs; auto-filing a `status:upstream-candidate`
+    issue on a high-confidence find removes the dependency on manual
+    noticing (#143). Never set in `kurone-kito/idd-skill` itself — the
+    adopter-only condition it gates cannot occur there.
+  - `developmentBranch: "main"` + `worktreeGuard.refuseBaseBranchCommits:
+    true` adopted together — hardens the existing
+    `worktreeGuard.enabled: true` guard to also refuse a primary-worktree
+    commit/push made directly on the base branch, not only on an
+    `issue/*`/`roadmap-audit/*` branch (#143). This also required
+    resyncing `.githooks/_idd-worktree-guard.sh` itself (out of sync
+    with upstream's own `refuseBaseBranchCommits` support, a gap PR
+    #159's review caught) — see
+    [Helper runtime](#helper-runtime-ephemeral-npx) below.
+  - `labels.untrustedLabelerLogins: ["coderabbitai[bot]"]` adopted,
+    backed by a hand-written `.github/workflows/strip-untrusted-labels.yml`
+    guard (the manual recipe, not the `idd-onboard --substitute`
+    generated path, since that generator is not a cataloged
+    `ephemeral-npx` helper command) — guards this repository's three
+    configured IDD labels against CodeRabbit's issue-enrichment
+    auto-labeling (#143). See [IDD label set](#idd-label-set) below.
+  - The optional `idd-spec-audit` companion skill is adopted, installed
+    at `.claude/skills/idd-spec-audit/` mirroring the `issue-authoring`
+    installed-path precedent (#150). See
+    [Policy decisions](#policy-decisions) below.
+  - `provider`, `advisoryWait.secondaryQuietWindow`,
+    `advisoryWait.providerOutage.terminalWindow`, `advisoryConvergence.*`,
+    `localValidationEvidence.maxAge`, `providerHealth.*`,
+    `discover.milestoneScope`, and `critiqueLoop.telemetryHook` were all
+    considered and intentionally not adopted this cycle — each already
+    matches this repository's actual behavior, or has no adopted use
+    case yet.
+  - Registering `idd-advisory-convergence` as a required GitHub-ruleset
+    status check was reconsidered again this cycle and declined again
+    — unchanged from the `0.7.0` entry's position; see
+    [Helper runtime](#helper-runtime-ephemeral-npx) below.
+  - The imported workflow surface now ships all three files:
+    `idd-advisory-convergence.yml`, `post-merge-cleanup.yml` (both
+    resynced, the former gaining the new
+    `idd-advisory-convergence-self-waiver` job), and
+    `idd-advisory-convergence-comment.yml` (newly importable — upstream
+    now exports an `idd-review-comment-origin` bin entry, resolving the
+    gap #128 tracked; closed via #152). #130's tracked upstream gap
+    (the post-merge-cleanup evidence-discard logic only checking the
+    prior comment's recorded status, not the current run's own status)
+    was fixed upstream and picked up automatically via this resync's
+    verbatim file copy — no local patch was needed; resolved via #152.
+  - The `issue-authoring` skill bundle was resynced in full (#142),
+    surfacing two new structural preconditions this repository does
+    not yet satisfy: no configured `issueAuthoring.journalIssue` for
+    standalone issue authoring, and no `ephemeral-npx` capability for
+    the new capability-checked issue-publication command. Tracked as
+    `status:needs-decision` in #157, not resolved by this resync.
 
 ## Project values
 
@@ -87,11 +176,20 @@ scripts.
 
 ## Policy decisions
 
-- Merge policy: `fully_autonomous_merge`
+- Merge policy: `fully_autonomous_merge`. `mergePolicyAck:
+  "fully_autonomous_merge"` reaffirms this value (added at `0.11.0`,
+  #140) now that upstream's own distributed default flipped to
+  `human_merge` — a pure diagnostics field, no merge-authority change.
 - Credential scope: narrowest profile matching the merge policy
 - PR review profile: `copilot-advisory` (default)
 - Review-thread resolution: `fast-agent-resolve` (default)
-- Critique-loop profile: shipped defaults (see `docs/policy-constants.md`)
+- Critique-loop delegate: `combined` mode, using this repository's own
+  `pre-push-validate` command (markdownlint + cspell) — C1's per-agent
+  critique runs alongside this delegate on every pass, findings
+  unioned. Adopted at `0.11.0` (#143); `fallback` mode was considered
+  and rejected because it would skip the per-agent pass whenever the
+  delegate merely exits 0, a review-quality regression rather than an
+  addition.
 - CI wait policy: `PT30M` / `PT10M` / `rerun-once` (defaults)
 - Issue-author approval gate: enabled (default)
 - Maintainer approval actors: `owners-and-maintainers-only` (default)
@@ -100,6 +198,29 @@ scripts.
   source layout by #44; a future template resync must copy the
   upstream bundle to that same installed path, not the pre-#44
   location)
+- `idd-spec-audit` companion (new in `0.10.0`, same distribution
+  pattern as `issue-authoring`): installed at
+  `.claude/skills/idd-spec-audit/`, mirroring the `issue-authoring`
+  installed-path precedent above (#150).
+- `authoringLanguage: "en"` — pinned explicitly at `0.11.0` (#143),
+  previously left unadopted twice. This repository's global Claude
+  Code instructions direct English documentation/comments regardless
+  of a session's own conversational language, and this repository's
+  issue/PR history is entirely in English already.
+- `upstreamEscalation.enabled: true` — adopted at `0.11.0` (#143). This
+  repository has real precedent (#128, #130) finding genuine
+  `idd-skill` upstream defects during resyncs; auto-filing a
+  `status:upstream-candidate` issue on a high-confidence find removes
+  the dependency on manual noticing.
+- `providerOutage` declaration: adopted in full at `0.11.0` (#143),
+  including its `ciGate.externalCheckWaivers`/`externalChecks.waivable`
+  preconditions — see
+  [Helper runtime](#helper-runtime-ephemeral-npx) below. Declaration
+  target: #158, a durable comment-only holding issue.
+- `developmentBranch`: `main`. `worktreeGuard.refuseBaseBranchCommits`:
+  `true` — both adopted together at `0.11.0` (#143); see
+  [Helper runtime](#helper-runtime-ephemeral-npx) below for the local
+  hook enforcement this required.
 - `.github/instructions/idd-roadmap-audit.instructions.md`'s
   contract-path reference intentionally points at that same installed
   `.claude/skills/issue-authoring/references/contract.md` location,
@@ -131,9 +252,10 @@ scripts.
 - Advisory-wait convergence scope: `idd-claimed` (see
   [Helper runtime](#helper-runtime-ephemeral-npx) below for the
   rationale)
-- Worktree guard: `enabled: true` (see
+- Worktree guard: `enabled: true`, `refuseBaseBranchCommits: true`
+  (the latter added at `0.11.0`, #143 — see
   [Helper runtime](#helper-runtime-ephemeral-npx) below for the
-  activation step)
+  activation step and the local hook enforcement it required)
 - Labels: see [IDD label set](#idd-label-set) below
 - Claim timing: stale `PT24H` / heartbeat `PT12H` (defaults)
 - Autopilot-suitability floor: `3` (default) — no repository-specific
@@ -197,6 +319,20 @@ precisely because a human has not acted yet. The stale bot cannot read
 with a comment naming the four policy keys above it mirrors; keep both
 in sync if any of these label names ever changes.
 
+`labels.untrustedLabelerLogins: ["coderabbitai[bot]"]` (added at
+`0.11.0`, #143): CodeRabbit's issue-enrichment auto-labeling is active
+or will be shortly in this repository, and it can apply any of the
+three configured labels above to an ordinary issue on its own
+judgment, silently dropping it from execution candidates or parking it
+behind a hold. `.github/workflows/strip-untrusted-labels.yml` guards
+against this — hand-written from upstream's manual recipe
+(`docs/customization.md`'s "Fallback: manual recipe" subsection)
+rather than the `idd-onboard --substitute` generated path, since that
+generator is not a cataloged `ephemeral-npx` helper command. Scope is
+the three base labels only; the optional
+`issueAuthoring.authoringLabelName` extension was considered and left
+out — no observed history of the labeler touching that label.
+
 ## Helper runtime (`ephemeral-npx`)
 
 This repository has no `package.json` and no lockfile, ruling out the
@@ -207,11 +343,12 @@ add files to this shell-and-Terraform repository and need re-vendoring
 on every upstream bump. `ephemeral-npx` avoids both costs.
 
 - Pinned helper package spec:
-  `https://codeload.github.com/kurone-kito/idd-skill/tar.gz/f51a8bb73a47452eff5799e8a27251b660ba4ae0`
+  `https://codeload.github.com/kurone-kito/idd-skill/tar.gz/1f90787ebf4021673ce6e5eb69741df331fd2037`
   — intentionally pinned to the same commit the instruction files were
-  imported from (originally in #41, resynced in #88, resynced to this
-  commit in #119), so a helper's JSON output contract can never drift
-  away from the instruction step that reads it.
+  imported from (originally in #41, resynced in #88, resynced to
+  `f51a8bb7` in #119, resynced to this commit in #140), so a helper's
+  JSON output contract can never drift away from the instruction step
+  that reads it.
 - Canonical invocation form: `npx --yes --package <pinned-spec>
   idd-<helper>`. Under this profile the `idd-*` bin facade is the
   authoritative surface, not `node scripts/*.mjs`.
@@ -229,9 +366,16 @@ on every upstream bump. `ephemeral-npx` avoids both costs.
   repository's shared config, so it applies across every worktree of a
   given clone rather than to just one — this is the correct scope for
   this guard: `.githooks/_idd-worktree-guard.sh` only ever blocks a
-  commit or push made from the *primary* worktree while `HEAD` sits on
-  an `issue/*` or `roadmap-audit/*` branch, so it is a guaranteed no-op
-  in every sibling implementation worktree.
+  commit or push made from the *primary* worktree, so it is a
+  guaranteed no-op in every sibling implementation worktree. Until
+  `0.11.0`, the guard only blocked `HEAD` sitting on an `issue/*` or
+  `roadmap-audit/*` branch. With `worktreeGuard.refuseBaseBranchCommits:
+  true` and `developmentBranch: "main"` now both set (#143), it also
+  blocks a primary-worktree commit/push made directly on `main` — this
+  repository's local hook copy had drifted from upstream's `#2801`
+  patch and needed a verbatim resync of the hook file itself to pick up
+  this check (the config keys alone changed nothing locally until that
+  resync landed, per PR #159's review).
 - Why `advisoryWait.convergenceScope` is `idd-claimed` rather than the
   `all-prs` default: this repository merges Dependabot pull requests,
   which carry no IDD claim and would otherwise be swept into an
@@ -282,17 +426,33 @@ on every upstream bump. `ephemeral-npx` avoids both costs.
   from the HEAD commit timestamp) only exists once
   `ciGate.externalCheckWaivers.mode` is `maintainer-authorized` (not its
   default, `disabled`) and `idd-advisory-convergence` is listed under
-  `ciGate.externalChecks.waivable`. **Neither precondition is met
-  today**: `ciGate` now exists in `.github/idd/config.json` (added by
-  #99 to trust an empty classic branch-protection read, now that this
-  repository's branch protection lives in the rulesets above instead of
-  the classic API), but it sets only `trustEmptyProtectionReads`;
-  `externalCheckWaivers` is still unset, so both default closed. A
-  maintainer who wants the escape hatch has to add both keys
-  explicitly; until then, a stuck not-ready verdict
-  past the 24h deadline has no waiver available, only the underlying
-  advisory review actually converging. Posting a waiver comment, once
-  the escape hatch is enabled, does not by itself re-run the check —
-  a fresh trigger (a `pull_request` synchronize, review or
-  review-comment activity, or `workflow_dispatch`) still has to fire;
-  this workflow has no `push` trigger.
+  `ciGate.externalChecks.waivable`. **Both preconditions are now met**
+  (adopted at `0.11.0`, #143 — previously neither was, per the `0.7.0`
+  entry above): `ciGate` sets `trustEmptyProtectionReads: true` (#99,
+  unchanged), `externalCheckWaivers.mode: "maintainer-authorized"`, and
+  `externalChecks.waivable` lists `idd-advisory-convergence`. This opens
+  two distinct routes, not one: (1) a maintainer can post a
+  per-pull-request `idd-external-check-waiver:` marker directly once
+  past the 24h deadline, or (2) once this pull request's own
+  terminal-unavailable state independently holds (Copilot's recovery
+  cycle exhausted and `advisoryWait.terminalWindow` elapsed with no
+  current-HEAD review — see
+  [`idd-advisory-wait.instructions.md`](../.github/instructions/idd-advisory-wait.instructions.md#terminal-copilot-stall-recovery-contract-state-policy-markers-clock)),
+  an active `providerOutage` declaration (target: #158) substitutes for
+  posting that per-PR marker. Passing the 24h deadline alone does
+  **not** by itself satisfy route (2) — declaring an outage without the
+  PR's own terminal state also holding leaves the check red. Posting a
+  waiver comment does not by itself re-run the check — a fresh trigger
+  still has to fire. `workflow_dispatch` does **not** reliably refresh
+  the current-HEAD required-check rollup (a dispatched run has no
+  `pull_request` context to associate with the PR's HEAD SHA) and must
+  not be used for this; rerun the existing run instead (`gh run rerun
+  <run-id>`, see
+  [rerun mechanics](../.github/instructions/idd-ci.instructions.md#rerun-mechanics)),
+  or let the imported `idd-advisory-convergence-comment.yml` companion
+  workflow rerun it automatically for a qualifying IDD-originated
+  comment (arbitrary review-comment activity alone is insufficient —
+  this workflow itself only triggers on `pull_request`/
+  `pull_request_target` `opened`, `reopened`, or `synchronize`, not on
+  review or review-comment events). This workflow has no `push`
+  trigger either.

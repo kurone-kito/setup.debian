@@ -442,7 +442,16 @@ on every upstream bump. `ephemeral-npx` avoids both costs.
   posting that per-PR marker. Passing the 24h deadline alone does
   **not** by itself satisfy route (2) — declaring an outage without the
   PR's own terminal state also holding leaves the check red. Posting a
-  waiver comment does not by itself re-run the check —
-  a fresh trigger (a `pull_request` synchronize, review or
-  review-comment activity, or `workflow_dispatch`) still has to fire;
-  this workflow has no `push` trigger.
+  waiver comment does not by itself re-run the check — a fresh trigger
+  still has to fire. `workflow_dispatch` does **not** reliably refresh
+  the current-HEAD required-check rollup (a dispatched run has no
+  `pull_request` context to associate with the PR's HEAD SHA) and must
+  not be used for this; rerun the existing run instead (`gh run rerun
+  <run-id>`, see
+  [rerun mechanics](../.github/instructions/idd-ci.instructions.md#rerun-mechanics)),
+  or let the imported `idd-advisory-convergence-comment.yml` companion
+  workflow rerun it automatically for a qualifying IDD-originated
+  comment (arbitrary review-comment activity alone is insufficient —
+  this workflow itself only triggers on `pull_request`/
+  `pull_request_target` `synchronize`, not on review or review-comment
+  events). This workflow has no `push` trigger either.

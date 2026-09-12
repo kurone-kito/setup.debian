@@ -58,8 +58,7 @@ body:
         - Texts editors
         - TUI
         - Virtualizations
-        - Others
-        - Other / new category
+        - Others / new category
     validations:
       required: true
 
@@ -92,7 +91,8 @@ body:
       description: >-
         Should this tool be installed by setup.ubuntu, or is it a better fit
         for the shared dotfiles mise config? See
-        docs/dotfiles-boundary.md for this repository's ownership split.
+        [docs/dotfiles-boundary.md](../../docs/dotfiles-boundary.md) for
+        this repository's ownership split.
       options:
         - setup.ubuntu (this repo)
         - candidate for the dotfiles shared mise config instead

@@ -1681,6 +1681,27 @@ this repository already configures is the documented human off-ramp
 for precisely this situation, not a gap this mechanism itself needs to
 close.
 
+### Suitability close-execute helper
+
+- Command: `node scripts/suitability-close-execute.mjs --issue <number>
+  [--owner <owner>] [--repo <repo>] [--policy <path>] [--now <ISO8601>]
+  [--claim-id <claim-id> --agent-id <agent-id> --apply]`
+- Published bin: `idd-suitability-close-execute`
+- Purpose (#1485): the gated pre-claim high-confidence duplicate/
+  superseded close `idd-suitability.instructions.md`'s "High-confidence
+  coordination-close" step invokes, after posting the
+  `suitability-close/<issue>-<slug>` coordination claim. Default (no
+  `--apply`): dry-run, evaluating Check 4's high-confidence tier and
+  printing `{ ready, eligible, evidence }` without mutating. Never fires
+  on the weak title/declaration heuristic -- only a
+  `tier: 'high-confidence'` verdict.
+- `--apply` requires `--claim-id` and `--agent-id` (this helper does not
+  post the coordination claim itself). Re-validates the claim and
+  re-collects evidence immediately before mutating; posts the
+  evidence-bound close comment, closes the issue, and releases the
+  claim, in that order. Fails closed (exit 1, no mutation) on any
+  lost/stale/non-owned claim or a no-longer-eligible fresh evaluation.
+
 ### Provider health helper
 
 - Command: `node scripts/provider-health.mjs [--owner <owner>] [--repo <repo>]`

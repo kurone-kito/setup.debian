@@ -243,6 +243,11 @@ heuristic — for a discovery-path candidate (A2/A3 roadmap traversal or
 A0-O orphan-first; never an A0-T explicit target, which keeps its
 report-and-stop path unchanged):
 
+Under `instructions-only` (no helper runtime), skip this optimization
+entirely: fall back to the ordinary Check 4 `duplicate` outcome above
+(report, fail the candidate, do not close it) instead of attempting a
+close with no `suitability-close-execute` helper available.
+
 1. Post a no-worktree coordination claim on the candidate, structurally
    identical to A1.5's roadmap-audit claim
    (`idd-roadmap-audit.instructions.md`) but with
@@ -253,9 +258,18 @@ report-and-stop path unchanged):
    to dry-run first):
 
    ```sh
+   # source repo / vendored-node
    node scripts/suitability-close-execute.mjs --issue <number> \
      --claim-id <claim-id> --agent-id <agent-id> --apply
+
+   # package-manager / ephemeral-npx
+   <profile-selected-suitability-close-execute-command> --issue <number> \
+     --claim-id <claim-id> --agent-id <agent-id> --apply
    ```
+
+   Resolve `<profile-selected-suitability-close-execute-command>` from
+   `docs/idd-helper-scripts.md`; do not hardcode `node scripts/...` for
+   non-vendored profiles.
 
    It re-collects the same mechanical evidence, posts the
    evidence-bound closing comment (the accepted human-notification

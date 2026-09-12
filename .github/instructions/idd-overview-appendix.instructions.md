@@ -76,10 +76,22 @@ does not re-enter.
 heartbeat -- see idd-ci.instructions.md's Hold-and-report failure shapes.
 
 **Parked-change bound** (conditional, only when responding to a known
-provider outage): before claiming a new issue, check
-`node scripts/provider-outage-park.mjs`'s `boundReached`. If `true`, do
-not claim -- route elsewhere or wait instead of manufacturing another
-unmergeable pull request.
+provider outage): before claiming a new issue, check the profile-selected
+parked-change bound helper's `boundReached` field:
+
+```sh
+# source repo / vendored-node
+node scripts/provider-outage-park.mjs
+
+# package-manager / ephemeral-npx
+<profile-selected-provider-outage-park-command>
+```
+
+Resolve `<profile-selected-provider-outage-park-command>` from
+`docs/idd-helper-scripts.md`; do not hardcode `node scripts/...` for
+non-vendored profiles. If `boundReached` is `true`, do not claim --
+route elsewhere or wait instead of manufacturing another unmergeable
+pull request.
 
 ## Roadmap markers
 

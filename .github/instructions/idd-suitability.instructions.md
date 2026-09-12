@@ -243,6 +243,11 @@ heuristic — for a discovery-path candidate (A2/A3 roadmap traversal or
 A0-O orphan-first; never an A0-T explicit target, which keeps its
 report-and-stop path unchanged):
 
+Under `instructions-only` (no helper runtime), skip this optimization
+entirely: fall back to the ordinary Check 4 `duplicate` outcome above
+(report, fail the candidate, do not close it) instead of attempting a
+close with no `suitability-close-execute` helper available.
+
 1. Post a no-worktree coordination claim on the candidate, structurally
    identical to A1.5's roadmap-audit claim
    (`idd-roadmap-audit.instructions.md`) but with

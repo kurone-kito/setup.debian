@@ -453,5 +453,6 @@ on every upstream bump. `ephemeral-npx` avoids both costs.
   workflow rerun it automatically for a qualifying IDD-originated
   comment (arbitrary review-comment activity alone is insufficient —
   this workflow itself only triggers on `pull_request`/
-  `pull_request_target` `synchronize`, not on review or review-comment
-  events). This workflow has no `push` trigger either.
+  `pull_request_target` `opened`, `reopened`, or `synchronize`, not on
+  review or review-comment events). This workflow has no `push`
+  trigger either.

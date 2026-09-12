@@ -33,7 +33,9 @@ words:
   - deprioritize
   - desync
   - desynced
+  - dofork
   - esync
+  - ghec
   - ghes
   - hyfetch
   - kito
@@ -45,11 +47,13 @@ words:
   - libgl
   - ludeeus
   - msedit
+  - nektos
   - nodm
   - nvenc
   - nyancat
   - ollama
   - qwen
+  - remediations
   - resynced
   - toctou
   - undispositioned

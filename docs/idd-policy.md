@@ -139,11 +139,13 @@ changes.
     was fixed upstream and picked up automatically via this resync's
     verbatim file copy — no local patch was needed; resolved via #152.
   - The `issue-authoring` skill bundle was resynced in full (#142),
-    surfacing two new structural preconditions this repository does
-    not yet satisfy: no configured `issueAuthoring.journalIssue` for
+    surfacing two new structural preconditions this repository did not
+    yet satisfy: no configured `issueAuthoring.journalIssue` for
     standalone issue authoring, and no `ephemeral-npx` capability for
     the new capability-checked issue-publication command. Tracked as
-    `status:needs-decision` in #157, not resolved by this resync.
+    `status:needs-decision` in #157; resolved live with the maintainer
+    and implemented in #164 — see
+    [Policy decisions](#policy-decisions) below.
 
 ## Project values
 
@@ -202,6 +204,24 @@ scripts.
   pattern as `issue-authoring`): installed at
   `.claude/skills/idd-spec-audit/`, mirroring the `issue-authoring`
   installed-path precedent above (#150).
+- `issueAuthoring.journalIssue`: `kurone-kito/setup.ubuntu#163`, a
+  dedicated durable comment-only issue created for this purpose —
+  decided with the maintainer live (#157, #164), kept separate from
+  #158 (`providerOutage.declarationTarget`), a different concern.
+  Standalone (non-roadmap-anchored) issue authoring stays allowed, not
+  disabled.
+- Capability-checked create-with-label publication command
+  (`.claude/skills/issue-authoring/references/contract.md`/
+  `workflow-boundary.md`'s "capability-checked create-with-label
+  operation" requirement, new in `0.11.0`'s #142 resync): this
+  repository has no `ephemeral-npx`-published helper for it and none
+  is expected upstream soon, so it formally adopts `gh issue create`
+  followed by label application and a re-fetch/verify step as the
+  locally-accepted substitute (#157, #164) — the same sequence already
+  used to create #155, #157, #163, and #164 themselves. This is a
+  **permanent, intentional local divergence** from the distributed
+  contract's undefined fallback, not an unresolved gap; a future
+  template resync must not treat it as one.
 - `authoringLanguage: "en"` — pinned explicitly at `0.11.0` (#143),
   previously left unadopted twice. This repository's global Claude
   Code instructions direct English documentation/comments regardless
